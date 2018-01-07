@@ -111,8 +111,8 @@ status_t setNativeWindowSizeFormatAndUsage(
         }
     }
 
-    uint64_t finalUsage = (uint32_t) usage | (uint32_t) consumerUsage;
-    ALOGV("gralloc usage: %#x(producer) + %#x(consumer) = 0x%" PRIx64,
+    uint64_t finalUsage = (usage | consumerUsage) & 0xffffffffLL;
+    ALOGV("gralloc usage: %#x(producer) + %#x(consumer) = %#" PRIx64,
             usage, consumerUsage, finalUsage);
     err = native_window_set_usage(nativeWindow, finalUsage);
     if (err != NO_ERROR) {
@@ -127,7 +127,7 @@ status_t setNativeWindowSizeFormatAndUsage(
         return err;
     }
 
-    ALOGD("set up nativeWindow %p for %dx%d, color %#x, rotation %d, usage 0x%" PRIx64,
+    ALOGD("set up nativeWindow %p for %dx%d, color %#x, rotation %d, usage %#" PRIx64,
             nativeWindow, width, height, format, rotation, finalUsage);
     return NO_ERROR;
 }
